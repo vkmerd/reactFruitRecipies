@@ -9,7 +9,9 @@ interface Fruit {
   fruit_adet:number
 }
 export default function Products(){
-    const [fruitState, selectFruitState] = useState<Fruit[]>([])
+  const [fruitState, selectFruitState] = useState<Fruit[]>([])
+  const [searchState, setSearchState] = useState("")
+
   const selectFruit = async() => {
     const { data, error } = await supabase
     .from('fruit')
@@ -24,19 +26,26 @@ export default function Products(){
 
   useEffect(()=>{
   selectFruit()
+  
   },[])
+
+  const fruitStates = fruitState.filter(fruit => 
+      fruit.fruit_name.toLowerCase().includes(searchState.toLowerCase()) || fruit.fruit_category.toLowerCase().includes(searchState.toLowerCase())
+  )
 
   return (
     <>
+    <input type="text" onChange={(e) => setSearchState(e.target.value)} placeholder='Meyve Ara'/>
       <div>
-        {fruitState.map((fruit) => (
-          
-          fruit.fruit_adet < 5 ?(
-            <ul key={fruit.id}>
-          <li>{fruit.fruit_name},{fruit.fruit_category},{fruit.fruit_adet}</li>
-        </ul>
-          ) : null
-        ))}
+      {
+        fruitStates.length > 0 ? (
+          fruitStates.map((fruit) => (
+          <ul key={fruit.id}>
+            <li>{fruit.fruit_name}, {fruit.fruit_category}, {fruit.fruit_adet}</li>
+          </ul>
+          ))
+        ) : <p>Meyve Bulunamadı</p>
+      }
       </div>
     </>
   )

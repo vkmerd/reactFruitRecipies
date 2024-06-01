@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../SupaClient';
 import { Route, Routes, Link } from 'react-router-dom';
-import Products from '../pages/Products';
+
 
 interface FruitFormData {
   fruitName: string;
@@ -10,11 +10,11 @@ interface FruitFormData {
 }
 
 export default function Form() {
-  const [fruit, setFruit] = useState({});
+  const [fruit, setFruit] = useState<FruitFormData>({});
 
-  const submitFruitForm =  async(e) => {
+  const submitFruitForm =  async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.target);
+    const data = new FormData(e.currentTarget);
 
     const fruitData: FruitFormData = {
       fruitName: data.get('fruitName') as string,
@@ -45,7 +45,7 @@ export default function Form() {
     <>
       <div className="container">
         <div className="full-height row justify-content-center align-items-center">
-          <h2>Ürün Kaydı Gir</h2>
+          <h2 className='text-center'>Ürün Kaydı Gir</h2>
           <div className="col-xl-6">
             <form onSubmit={submitFruitForm} className='d-flex flex-column form-gap'>
                   <input type="text" name="fruitName" placeholder="Meyve Adı" />
@@ -56,6 +56,7 @@ export default function Form() {
                   </select>
                   <input type="submit" value="Gönder!" />
             </form>
+            <Link to="/products">Ürünlere Git</Link>
           </div>
         </div>
       </div>
